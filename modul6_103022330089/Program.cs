@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 
 class SayaTubeVideo
 {
@@ -10,7 +11,7 @@ class SayaTubeVideo
 
     public SayaTubeVideo(String title)
     {
-        Debug.Assert(title.Length <= 100, "Judul video maksimal 100 karakter");
+        Debug.Assert(title.Length <= 200, "Judul video maksimal 200 karakter");
         Debug.Assert(title != null, "Judul tidak boleh kosong");
 
         Random acak = new Random();
@@ -23,14 +24,17 @@ class SayaTubeVideo
     {
         try
         {
-            if (count <= 0 || count > 10000000)
+            if (count < 0 || count > 25000000)
             {
-                throw new ArgumentException("Error: Input play count harus antara 1 hingga 10.000.000.");
+                throw new ArgumentException("Error: Input play count harus antara 1 hingga 25.000.000 .");
             }
-
-            checked
+            if (playCount + count >= 250000000) {
+                throw new ArgumentException("Error: Input play count harus antara 1 hingga 25.000.000 .");
+            }
+                checked
             {
                 this.playCount += count;
+                Console.WriteLine("Play count berhasil ditambahkan sebanyak " + count);
             }
         }
         catch (ArgumentException ex)
@@ -62,6 +66,9 @@ class SayaTubeUser
 
     public SayaTubeUser(String Username)
     {
+        Debug.Assert(Username.Length <= 100, "Panjang nama maksimal 100 karakter");
+        Debug.Assert(Username != null, "Nama tidak boleh kosong");
+
         Random acak = new Random();
         this.id = acak.Next(10000, 99999);
         uploadedVideos = new List<SayaTubeVideo>();
@@ -75,6 +82,7 @@ class SayaTubeUser
 
     public void AddVideo(SayaTubeVideo video)
     {
+        Debug.Assert(video != null, "ERROR!, Silahkan masukkan video yang ingin diupload");
         uploadedVideos.Add(video);
     }
 
@@ -83,9 +91,12 @@ class SayaTubeUser
         Console.WriteLine("User: " + this.Username);
         for (int i = 0; i < uploadedVideos.Count; i++)
         {
+            Debug.Assert(i < 8);
             Console.WriteLine("Video ke-" + (i + 1));
                  uploadedVideos[i].PrintVideoTitle();
+
         }
+        
     }
 }
 
@@ -102,7 +113,7 @@ class program
         SayaTubeVideo video7 = new SayaTubeVideo("Review Film f oleh Haafizd Alhabib Azwir");
         SayaTubeVideo video8 = new SayaTubeVideo("Review Film g oleh Haafizd Alhabib Azwir");
         SayaTubeVideo video9 = new SayaTubeVideo("Review h oleh Haafizd Alhabib Azwir");
-        SayaTubeVideo video10 = new SayaTubeVideo("Review Film <judul_film> oleh Haafizd Alhabib Azwir");
+        SayaTubeVideo video10 = new SayaTubeVideo("Review Film i oleh Haafizd Alhabib Azwir");
 
         SayaTubeUser user = new SayaTubeUser("Haafizd Alhabib Azwir");
 
@@ -116,6 +127,31 @@ class program
         user.AddVideo(video8);
         user.AddVideo(video9);
         user.AddVideo(video10);
+
+        video1.IncreasePlayCount(2500000);
+        video1.IncreasePlayCount(999999999);
+        video2.IncreasePlayCount(5000000);
+        video3.IncreasePlayCount(7500000);
+        video4.IncreasePlayCount(10000000);
+        video5.IncreasePlayCount(12500000);
+        video6.IncreasePlayCount(15000000);
+        video7.IncreasePlayCount(17500000);
+        video8.IncreasePlayCount(20000000);
+        video9.IncreasePlayCount(22500000);
+        video10.IncreasePlayCount(2500000);
+
+
+        video1.PrintVideoDetail();
+        video2.PrintVideoDetail();
+        video3.PrintVideoDetail();
+        video4.PrintVideoDetail();
+        video5.PrintVideoDetail();
+        video6.PrintVideoDetail();
+        video7.PrintVideoDetail();
+        video8.PrintVideoDetail();
+        video9.PrintVideoDetail();
+        video10.PrintVideoDetail();
+
 
         user.PrintAllVideoPlaycount();
 
